@@ -1,0 +1,44 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: se
+  labels:
+    app: se
+spec:
+  selector:
+    matchLabels:
+      app: se
+  template:
+    metadata:
+      labels:
+        app: se
+    spec:
+      nodeSelector:
+        tt-se: se
+      containers:
+      - name: se
+        image: antonburtsev/se
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        env:
+        - name: SPW
+          value: qwe
+        - name: HPW
+          value: qwe
+        - name: USERS
+          value: qwe:qwe
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: se
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+  - port: 5555
+    nodePort: 31555
+  selector:
+    app: se

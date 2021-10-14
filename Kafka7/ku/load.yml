@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: load
+  labels:
+    app: load
+spec:
+  replicas: 1
+  serviceName: load
+  selector:
+    matchLabels:
+      app: load
+  template:
+    metadata:
+      labels:
+        app: load
+    spec:
+      nodeSelector:
+        tt-load: load
+      containers:
+      - name: load
+        image: antonburtsev/kafka7
+        env:
+        - { name: K7_TOPIC,       value: topic12  }
+        - { name: K7_DOP,         value: "1000"  }
+        - { name: K7_PAYLOAD,     value: "500"  }
+        - { name: K7_RF,          value: "2"  }
+        - { name: K7_BS,          value: "kafka-0.kafka-headless.smev3-dev0.svc.cluster.local"  }
+

@@ -1,0 +1,1 @@
+@kubectl exec -ti %* -n kt -- /bin/sh

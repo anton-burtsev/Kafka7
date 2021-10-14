@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoo
+  labels:
+    app: zoo
+spec:
+  selector:
+    matchLabels:
+      app: zoo
+  template:
+    metadata:
+      labels:
+        app: zoo
+    spec:
+      nodeSelector:
+        tt-se: se
+      containers:
+      - name: zoo
+        image: zookeeper
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo
+spec:
+  ports:
+  - port: 2181
+  selector:
+    app: zoo

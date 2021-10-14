@@ -1,0 +1,52 @@
+﻿apiVersion: v1
+kind: Pod
+metadata:
+  name: click
+  labels:
+    name: click
+spec:
+  nodeSelector:
+    tt-se: se
+  containers:
+    - name: click
+      image: yandex/clickhouse-server
+      volumeMounts:
+      - name: users-volume
+        mountPath: /etc/clickhouse-server/users.d/users.xml
+        subPath: users.xml
+  volumes:
+    - name: users-volume
+      configMap:
+        name: ch-users
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: click
+spec:
+  ports:
+  - port: 8123
+  selector:
+    name: click
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ch-users
+data:
+  users.xml: |
+    <?xml version="1.0"?>
+    <yandex>
+        <profiles>
+            <default>
+                <stream_flush_interval_ms>500</stream_flush_interval_ms>
+                <allow_experimental_window_functions>1</allow_experimental_window_functions>
+                <insert_deduplicate>0</insert_deduplicate>
+            </default>
+        </profiles>
+        <users>
+            <default>
+            <password></password>
+            </default>
+        </users>
+    </yandex>
